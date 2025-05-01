@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kamus 5 Bahasa khusus ezii~</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Fredoka&display=swap');
+
+    body {
+      font-family: 'Fredoka', sans-serif;
+      background: url('https://i.ibb.co.com/YrZYcKX/MEITU-20240801-121519123.jpg') no-repeat center center fixed;
+      background-size: cover;
+      margin: 0;
+      color: #5a0033;
+    }
+
+    .overlay {
+      background: rgba(255, 255, 255, 0.7);
+      min-height: 100vh;
+      padding: 2rem 0;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 1.5rem;
+    }
+
+    h1 {
+      text-align: center;
+      color: #ff69b4;
+      text-shadow: 1px 1px white;
+      font-size: 1.8rem;
+    }
+
+    input, button {
+      width: 100%;
+      padding: 0.8rem;
+      font-size: 1rem;
+      border-radius: 12px;
+      box-sizing: border-box;
+    }
+
+    input {
+      margin-top: 1rem;
+      border: 2px solid #ffcce0;
+      background-color: #fff0f5;
+    }
+
+    button {
+      margin-top: 1rem;
+      background-color: #ffb6c1;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background-color: #ff99bb;
+    }
+
+    .results {
+      margin-top: 2rem;
+      background: rgba(255, 240, 250, 0.9);
+      padding: 1rem;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(255, 105, 180, 0.3);
+    }
+
+    .result {
+      margin-bottom: 1rem;
+      border-left: 4px solid #ff69b4;
+      padding-left: 0.5rem;
+    }
+
+    .roman {
+      font-size: 0.9rem;
+      color: #aa0077;
+    }
+  </style>
+</head>
+<body>
+  <div class="overlay">
+    <div class="container">
+      <h1>Kamus 5 Bahasa<br>khusus ezii~</h1>
+      <input type="text" id="textInput" placeholder="Masukkan kata atau frasa...">
+      <button onclick="translateText()">Terjemahkan</button>
+      <div class="results" id="results"></div>
+    </div>
+  </div>
+
+  <script>
+    async function translateText() {
+      const text = document.getElementById('textInput').value.trim();
+      const resultsDiv = document.getElementById('results');
+      if (!text) {
+        resultsDiv.innerHTML = '<div class="result">Masukkan teks dulu ya!</div>';
+        return;
+      }
+
+      resultsDiv.innerHTML = 'Menerjemahkan...';
+
+      const languages = {
+        'Indonesia': 'id',
+        'Inggris': 'en',
+        'Jepang': 'ja',
+        'Mandarin': 'zh-CN',
+        'Korea': 'ko'
+      };
+
+      const output = [];
+
+      for (const [label, lang] of Object.entries(languages)) {
+        try {
+          const res = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${lang}&dt=t&dt=rm&q=` + encodeURIComponent(text));
+          const data = await res.json();
+          const translation = data[0][0][0];
+          const roman = data[0][0][3] || '';
+          output.push(`<div class="result"><strong>${label}:</strong> ${translation}` +
+            (roman ? `<div class="roman">(ABC: ${roman})</div>` : '') +
+            `</div>`);
+        } catch (e) {
+          output.push(`<div class="result"><strong>${label}:</strong> Gagal menerjemahkan</div>`);
+        }
+      }
+
+      resultsDiv.innerHTML = output.join('');
+    }
+  </script>
+</body>
+</html>
+#8098ff#8098ff
